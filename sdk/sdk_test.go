@@ -1,8 +1,6 @@
 package main
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"reflect"
 	"testing"
 )
@@ -13,22 +11,14 @@ func TestLoginSecret(t *testing.T) {
 		t.Log("Login secret error:", err)
 		t.FailNow()
 	}
-	if len(loginSecret) != 44 {
+	if len(loginSecret) != 32 {
 		t.Log("Login secret wrong size")
-		t.FailNow()
-	}
-	_, err = base64.URLEncoding.DecodeString(loginSecret)
-	if err != nil {
-		t.Log("Login secret not base64")
 		t.FailNow()
 	}
 }
 
 func TestGetSalt(t *testing.T) {
-	data := make([]byte, 32)
-	rand.Read(data)
-	saltIdBytes := hashSha256([]byte(data))
-	saltId := base64.URLEncoding.EncodeToString(saltIdBytes)
+	saltId := SaltIdForEmail("email")
 	salt, err := GetSalt(saltId)
 	if err != nil {
 		t.Log("Failed to get salt:", err)
@@ -49,6 +39,23 @@ func TestGetSalt(t *testing.T) {
 	}
 	if !reflect.DeepEqual(salt, salt2) {
 		t.Log("Salt is not saved between fetches:", salt, salt2)
+		t.FailNow()
+	}
+}
+
+func TestGetMasterSecret(t *testing.T) {
+	loginSecret, err := DeriveLoginSecret("email", "password")
+	if err != nil {
+		t.Log("Could not get login secret:", err)
+		t.FailNow()
+	}
+	masterSecret, err := GetMasterSecret(loginSecret)
+	if err != nil {
+		t.Log("Could not get master secret:", err)
+		t.FailNow()
+	}
+	if len(masterSecret) != 32 {
+		t.Log("Master secret invalid:", masterSecret)
 		t.FailNow()
 	}
 }

@@ -86,7 +86,6 @@ func getObject(objectId string) (string, error) {
 		}
 		return data, nil
 	}
-	fmt.Println("not found")
 	return "", fmt.Errorf("No object found")
 }
 
@@ -98,9 +97,9 @@ func writeObject(objectId string, objectData string) error {
 	return nil
 }
 
-func returnCode(w http.ResponseWriter, code int, message string) {
+func returnCode(w http.ResponseWriter, code int) {
 	w.WriteHeader(code)
-	w.Write([]byte(message))
+	w.Write([]byte(fmt.Sprintf("%d - %s", code, http.StatusText(code))))
 }
 
 type httpHandler func(w http.ResponseWriter, r *http.Request)
@@ -110,18 +109,18 @@ func requestHandler(getHandler httpHandler, postHandler httpHandler) httpHandler
 		switch r.Method {
 		case "GET":
 			if getHandler == nil {
-				returnCode(w, 405, "405 - Method not allowed")
+				returnCode(w, 405)
 			} else {
 				getHandler(w, r)
 			}
 		case "POST":
 			if postHandler == nil {
-				returnCode(w, 405, "405 - Method not allowed")
+				returnCode(w, 405)
 			} else {
 				postHandler(w, r)
 			}
 		default:
-			returnCode(w, 405, "405 - Method not allowed")
+			returnCode(w, 405)
 		}
 	}
 }
@@ -138,14 +137,14 @@ func handleSalt(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	saltId := pathParts[len(pathParts)-1]
 	if !verifyHash(saltId) {
-		returnCode(w, 403, "Invalid Salt")
+		returnCode(w, 403)
 		return
 	}
 	salt, err := getSalt(saltId)
 	if err != nil {
 		salt, err = generateSalt(saltId)
 		if err != nil {
-			returnCode(w, 500, "Server error")
+			returnCode(w, 500)
 			return
 		}
 	}
@@ -156,12 +155,12 @@ func handleObjectGet(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	objectId := pathParts[len(pathParts)-1]
 	if !verifyHash(objectId) {
-		returnCode(w, 403, "403 - Invalid Object ID")
+		returnCode(w, 403)
 		return
 	}
 	objectData, err := getObject(objectId)
 	if err != nil {
-		returnCode(w, 403, "403 - Invalid Object ID")
+		returnCode(w, 404)
 		return
 	}
 	fmt.Fprintf(w, objectData)
@@ -170,13 +169,12 @@ func handleObjectGet(w http.ResponseWriter, r *http.Request) {
 func handleObjectPost(w http.ResponseWriter, r *http.Request) {
 	pathParts := strings.Split(r.URL.Path, "/")
 	objectId := pathParts[len(pathParts)-1]
-	fmt.Println(r.URL.Path)
 	if !verifyHash(objectId) {
-		returnCode(w, 403, "Invalid Object ID")
+		returnCode(w, 403)
 	}
 	objectBytes, err := ioutil.ReadAll(io.LimitReader(r.Body, 10000))
 	if err != nil {
-		returnCode(w, 404, "403 - Invalid object")
+		returnCode(w, 404)
 		return
 	}
 	objectData := string(objectBytes)
