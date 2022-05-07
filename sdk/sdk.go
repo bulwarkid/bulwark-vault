@@ -185,11 +185,9 @@ func GetMasterSecret(loginSecret []byte) ([]byte, error) {
 	secretBase64, err := GetObjectByPath(loginSecret, "/master-secret")
 	if err != nil {
 		var requestError *UnsuccessfulRequestError
-		fmt.Println(err)
 		if !errors.As(err, &requestError) {
 			return nil, fmt.Errorf("Could not get master secret: %w", err)
 		}
-		fmt.Println(requestError)
 		if requestError.code != 404 {
 			return nil, fmt.Errorf("Could not get master secret: %w", err)
 		}
