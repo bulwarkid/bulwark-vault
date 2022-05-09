@@ -6,7 +6,7 @@ import (
 )
 
 func TestLoginSecret(t *testing.T) {
-	loginSecret, err := DeriveLoginSecret("email", "password")
+	loginSecret, err := deriveLoginSecret("email", "password")
 	if err != nil {
 		t.Log("Login secret error:", err)
 		t.FailNow()
@@ -18,8 +18,7 @@ func TestLoginSecret(t *testing.T) {
 }
 
 func TestGetSalt(t *testing.T) {
-	saltId := SaltIdForEmail("email")
-	salt, err := GetSalt(saltId)
+	salt, err := getSalt("email")
 	if err != nil {
 		t.Log("Failed to get salt:", err)
 		t.FailNow()
@@ -28,7 +27,7 @@ func TestGetSalt(t *testing.T) {
 		t.Log("Invalid salt:", salt, err)
 		t.FailNow()
 	}
-	salt2, err := GetSalt(saltId)
+	salt2, err := getSalt("email")
 	if err != nil {
 		t.Log("Failed to get second salt:", err)
 		t.FailNow()
@@ -44,7 +43,7 @@ func TestGetSalt(t *testing.T) {
 }
 
 func TestGetMasterSecret(t *testing.T) {
-	loginSecret, err := DeriveLoginSecret("email", "password")
+	loginSecret, err := deriveLoginSecret("email", "password")
 	if err != nil {
 		t.Log("Could not get login secret in test:", err)
 		t.FailNow()
