@@ -48,7 +48,7 @@ func TestGetMasterSecret(t *testing.T) {
 		t.Log("Could not get login secret in test:", err)
 		t.FailNow()
 	}
-	masterSecret, err := GetMasterSecret(loginSecret)
+	masterSecret, err := getMasterSecret(loginSecret)
 	if err != nil {
 		t.Log("Could not get master secret in test:", err)
 		t.FailNow()
@@ -60,7 +60,7 @@ func TestGetMasterSecret(t *testing.T) {
 }
 
 func TestGetKeyDirectory(t *testing.T) {
-	masterSecret, err := NewMasterSecret()
+	masterSecret, err := newMasterSecret()
 	if err != nil {
 		t.Logf("Error generating master secret: %s", err)
 		t.FailNow()
@@ -82,8 +82,8 @@ func TestGetKeyDirectory(t *testing.T) {
 }
 
 func TestVaultLogin(t *testing.T) {
-	vault := NewVault()
-	err := vault.Login("email", "password")
+	vault := newVault()
+	err := vault.login("email", "password")
 	if err != nil {
 		t.Logf("Could not log into vault: %s", err)
 		t.FailNow()

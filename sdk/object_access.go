@@ -1,15 +1,13 @@
 package main
 
 import (
-	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
-
-	"golang.org/x/crypto/hkdf"
 )
+
+const ACCESS_KEY_LENGTH = 32
+const ENCRYPTION_KEY_LENGTH = 32
 
 func saltId(data string) string {
 	saltIdBytes := hashSha256([]byte(data))
@@ -62,9 +60,7 @@ func decodeBlob(blobJson string) ([]byte, []byte, error) {
 
 func deterministicObjectAccessKey(secret []byte, path string) (string, error) {
 	secretString := base64.URLEncoding.EncodeToString(secret)
-	inputData := "object_access_key:" + secretString + ":" + path
-	r := hkdf.New(sha256.New, []byte(inputData), nil, nil)
-	bytes, err := ioutil.ReadAll(io.LimitReader(r, 32))
+	bytes, err := bytesFromHighEntropy("object_access_key:"+secretString+":"+path, ACCESS_KEY_LENGTH)
 	if err != nil {
 		return "", fmt.Errorf("Could not generate access key: %w", err)
 	}
@@ -73,9 +69,7 @@ func deterministicObjectAccessKey(secret []byte, path string) (string, error) {
 
 func deterministicObjectEncryptionKey(secret []byte, path string) ([]byte, error) {
 	secretString := base64.URLEncoding.EncodeToString(secret)
-	inputData := "object_encryption_key:" + secretString + ":" + path
-	r := hkdf.New(sha256.New, []byte(inputData), nil, nil)
-	bytes, err := ioutil.ReadAll(io.LimitReader(r, 32))
+	bytes, err := bytesFromHighEntropy("object_encryption_key:"+secretString+":"+path, ENCRYPTION_KEY_LENGTH)
 	if err != nil {
 		return nil, fmt.Errorf("Could not generate encryption key: %w", err)
 	}

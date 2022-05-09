@@ -5,7 +5,10 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"crypto/sha256"
+	"io"
+	"io/ioutil"
 
+	"golang.org/x/crypto/hkdf"
 	"golang.org/x/crypto/pbkdf2"
 )
 
@@ -56,6 +59,15 @@ func encryptBytes(data []byte, key []byte) ([]byte, []byte, error) {
 	return encryptedData, nonce, nil
 }
 
-func bytesFromLowEntropy(inputData string, salt []byte) []byte {
-	return pbkdf2.Key([]byte(inputData), salt, 10000, 32, sha256.New)
+func bytesFromLowEntropy(inputData string, salt []byte, length int) []byte {
+	return pbkdf2.Key([]byte(inputData), salt, 10000, length, sha256.New)
+}
+
+func bytesFromHighEntropy(inputData string, length int64) ([]byte, error) {
+	r := hkdf.New(sha256.New, []byte(inputData), nil, nil)
+	bytes, err := ioutil.ReadAll(io.LimitReader(r, length))
+	if err != nil {
+		return nil, err
+	}
+	return bytes, nil
 }

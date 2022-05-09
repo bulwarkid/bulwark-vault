@@ -1,26 +1,28 @@
 package main
 
 import (
-	"crypto/rand"
 	"encoding/base64"
 	"fmt"
 )
+
+const MASTER_SECRET_SIZE = 32
+const LOGIN_SECRET_SIZE = 32
 
 func deriveLoginSecret(email string, password string) ([]byte, error) {
 	salt, err := getSalt(email)
 	if err != nil {
 		return nil, err
 	}
-	return bytesFromLowEntropy("login_secret:"+email+":"+password, salt), nil
+	return bytesFromLowEntropy("login_secret:"+email+":"+password, salt, LOGIN_SECRET_SIZE), nil
 }
 
-func GetMasterSecret(loginSecret []byte) ([]byte, error) {
+func getMasterSecret(loginSecret []byte) ([]byte, error) {
 	secretBase64, err := getObjectByPath(loginSecret, "/master-secret")
 	if err != nil {
 		if !isReturnCode(err, 404) {
 			return nil, fmt.Errorf("Could not get master secret: %w", err)
 		}
-		secretBytes, err := NewMasterSecret()
+		secretBytes, err := newMasterSecret()
 		if err != nil {
 			return nil, fmt.Errorf("Could not generate random bytes: %w", err)
 		}
@@ -37,11 +39,6 @@ func GetMasterSecret(loginSecret []byte) ([]byte, error) {
 	return masterSecret, nil
 }
 
-func NewMasterSecret() ([]byte, error) {
-	secretBytes := make([]byte, 32)
-	n, err := rand.Read(secretBytes)
-	if err != nil || n != 32 {
-		return nil, fmt.Errorf("Could not generate random bytes: %w", err)
-	}
-	return secretBytes, nil
+func newMasterSecret() ([]byte, error) {
+	return randomBytes(MASTER_SECRET_SIZE)
 }

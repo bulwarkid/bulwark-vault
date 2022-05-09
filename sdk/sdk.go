@@ -5,16 +5,16 @@ type VaultAccess struct {
 	keyDirectory *KeyDirectory
 }
 
-func NewVault() *VaultAccess {
+func newVault() *VaultAccess {
 	return &VaultAccess{masterSecret: nil, keyDirectory: nil}
 }
 
-func (access *VaultAccess) Login(email, password string) error {
+func (access *VaultAccess) login(email, password string) error {
 	loginSecret, err := deriveLoginSecret(email, password)
 	if err != nil {
 		return err
 	}
-	masterSecret, err := GetMasterSecret(loginSecret)
+	masterSecret, err := getMasterSecret(loginSecret)
 	if err != nil {
 		return err
 	}
