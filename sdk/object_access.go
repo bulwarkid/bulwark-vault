@@ -9,6 +9,22 @@ import (
 const ACCESS_KEY_LENGTH = 32
 const ENCRYPTION_KEY_LENGTH = 32
 
+func randomAccessKey() (string, error) {
+	bytes, err := randomBytes(ACCESS_KEY_LENGTH)
+	if err != nil {
+		return "", fmt.Errorf("Could not generate access key: %w", err)
+	}
+	return base64.URLEncoding.EncodeToString(bytes), nil
+}
+
+func randomEncryptionKey() ([]byte, error) {
+	bytes, err := randomBytes(ENCRYPTION_KEY_LENGTH)
+	if err != nil {
+		return nil, fmt.Errorf("Could not generate encryption key: %w", err)
+	}
+	return bytes, nil
+}
+
 func saltId(data string) string {
 	saltIdBytes := hashSha256([]byte(data))
 	return base64.URLEncoding.EncodeToString(saltIdBytes)
