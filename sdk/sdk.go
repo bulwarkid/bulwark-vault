@@ -1,4 +1,4 @@
-package main
+package sdk
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ type VaultAccess struct {
 	keyDirectory *KeyDirectory
 }
 
-func newVault() *VaultAccess {
+func NewVault() *VaultAccess {
 	return &VaultAccess{masterSecret: nil, keyDirectory: nil}
 }
 

@@ -1,4 +1,4 @@
-package main
+package sdk
 
 import (
 	"encoding/base64"
@@ -22,7 +22,7 @@ func TestGetSalt(t *testing.T) {
 	}
 }
 
-func TestGetObjec(t *testing.T) {
+func TestGetObject(t *testing.T) {
 	masterSecret := testMasterSecret(t)
 	bytes, err := randomBytes(32)
 	checkTestError(t, err, "Could not generate bytes")

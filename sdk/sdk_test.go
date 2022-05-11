@@ -1,17 +1,17 @@
-package main
+package sdk
 
 import (
 	"testing"
 )
 
 func TestVaultLogin(t *testing.T) {
-	vault := newVault()
+	vault := NewVault()
 	err := vault.login("email", "password")
 	checkTestError(t, err, "Could not log into vault")
 }
 
 func TestVaultStore(t *testing.T) {
-	vault := newVault()
+	vault := NewVault()
 	err := vault.login("email", "password")
 	checkTestError(t, err, "Could not log into vault")
 	inputValue := "test value"
