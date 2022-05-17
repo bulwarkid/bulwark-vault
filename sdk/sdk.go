@@ -13,7 +13,7 @@ func NewVault() *VaultAccess {
 	return &VaultAccess{masterSecret: nil, keyDirectory: nil}
 }
 
-func (access *VaultAccess) login(email, password string) error {
+func (access *VaultAccess) Login(email, password string) error {
 	loginSecret, err := deriveLoginSecret(email, password)
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func (access *VaultAccess) login(email, password string) error {
 	return nil
 }
 
-func (access *VaultAccess) store(path string, data string) error {
+func (access *VaultAccess) Put(path string, data string) error {
 	var err error
 	if access.keyDirectory == nil {
 		return fmt.Errorf("Vault isn't logged in")
@@ -46,7 +46,7 @@ func (access *VaultAccess) store(path string, data string) error {
 	return nil
 }
 
-func (access *VaultAccess) get(path string) (string, error) {
+func (access *VaultAccess) Get(path string) (string, error) {
 	if access.keyDirectory == nil {
 		return "", fmt.Errorf("Vault isn't logged in")
 	}
