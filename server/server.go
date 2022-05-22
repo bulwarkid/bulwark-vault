@@ -106,6 +106,7 @@ type httpHandler func(w http.ResponseWriter, r *http.Request)
 
 func requestHandler(getHandler httpHandler, postHandler httpHandler) httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Access-Control-Allow-Origin","*")
 		switch r.Method {
 		case "GET":
 			if getHandler == nil {

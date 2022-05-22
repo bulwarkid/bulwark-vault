@@ -6,27 +6,58 @@ import (
 	"syscall/js"
 )
 
-func loginToVault(email, password string) *sdk.VaultAccess {
+func makeAsync(executor func(js.Value, []js.Value) any) js.Func {
+	return js.FuncOf(func(this js.Value, args []js.Value) any {
+		handler := js.FuncOf(func(_ js.Value, args2 []js.Value) interface{} {
+			resolve := args2[0]
+			go func() {
+				val := executor(this, args)
+				resolve.Invoke(val)
+			}()
+			return nil
+		})
+		promiseConstructor := js.Global().Get("Promise")
+		return promiseConstructor.New(handler)
+	});
+}
+
+func loginToVault(email, password string) (*sdk.VaultAccess, error) {
 	vault := sdk.NewVault()
 	err := vault.Login(email, password)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return vault
+	return vault, nil
 }
 
-func get(vault sdk.VaultAccess, path string) string {
+var vault *sdk.VaultAccess = nil
 
+func login(this js.Value, args []js.Value) any {
+	if len(args) != 2 {
+		return "";
+	}
+	email := args[0].String()
+	password := args[1].String()
+	vault = sdk.NewVault()
+	err := vault.Login(email, password)
+	if err != nil {
+		return fmt.Sprintf("Error logging into vault: %s", err)
+	}
+	return "";
 }
 
-func put(vault sdk.VaultAccess, path string, data string) {
-
+func getMasterSecret(this js.Value, args []js.Value) any {
+	if vault == nil {
+		return ""
+	}
+	return vault.MasterSecret()
 }
 
 func main() {
 	c := make(chan struct{})
-	sdk.NewVault()
-	fmt.Println("test")
-	js.Global().Set("foo", js.ValueOf("bar"))
+	fmt.Println("WASM started")
+	js.Global().Set("vaultLogin", makeAsync(login))
+	js.Global().Set("vaultGetMasterSecret", js.FuncOf(getMasterSecret))
+	js.Global().Set("test",js.ValueOf("foo"))
 	<-c
 }

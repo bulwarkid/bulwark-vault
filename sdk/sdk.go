@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"encoding/base64"
 	"fmt"
 )
 
@@ -59,4 +60,11 @@ func (access *VaultAccess) Get(path string) (string, error) {
 		return "", fmt.Errorf("Could not get object: %w", err)
 	}
 	return data, nil
+}
+
+func (vault *VaultAccess) MasterSecret() string {
+	if vault.masterSecret == nil {
+		return ""
+	}
+	return base64.URLEncoding.EncodeToString(vault.masterSecret)
 }

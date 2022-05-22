@@ -146,7 +146,7 @@ func writeObject(accessKey string, encryptionKey []byte, data string) error {
 		return fmt.Errorf("Could not create json: %w", err)
 	}
 	objectBase64 := base64.URLEncoding.EncodeToString([]byte(blobJson))
-	_, err = post("/vault/object/"+accessKey, "text/plain", objectBase64)
+	_, err = post("/vault/object/"+accessKey, objectBase64)
 	if err != nil {
 		return fmt.Errorf("Could not store encrypted data: %w", err)
 	}
