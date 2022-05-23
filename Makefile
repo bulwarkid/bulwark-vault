@@ -1,2 +1,2 @@
 wasm:
-	tinygo build -o demo/public/main.wasm -target wasm ./sdk-wasm/wasm.go
+	GOOS=js GOARCH=wasm go build -o demo/public/main.wasm ./sdk-wasm/wasm.go

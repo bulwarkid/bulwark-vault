@@ -8,8 +8,8 @@ import (
 
 func makeAsync(executor func(js.Value, []js.Value) any) js.Func {
 	return js.FuncOf(func(this js.Value, args []js.Value) any {
-		handler := js.FuncOf(func(_ js.Value, args2 []js.Value) interface{} {
-			resolve := args2[0]
+		executor := js.FuncOf(func(_ js.Value, executorArgs []js.Value) interface{} {
+			resolve := executorArgs[0]
 			go func() {
 				val := executor(this, args)
 				resolve.Invoke(val)
@@ -17,17 +17,8 @@ func makeAsync(executor func(js.Value, []js.Value) any) js.Func {
 			return nil
 		})
 		promiseConstructor := js.Global().Get("Promise")
-		return promiseConstructor.New(handler)
+		return promiseConstructor.New(executor)
 	});
-}
-
-func loginToVault(email, password string) (*sdk.VaultAccess, error) {
-	vault := sdk.NewVault()
-	err := vault.Login(email, password)
-	if err != nil {
-		return nil, err
-	}
-	return vault, nil
 }
 
 var vault *sdk.VaultAccess = nil
@@ -56,8 +47,9 @@ func getMasterSecret(this js.Value, args []js.Value) any {
 func main() {
 	c := make(chan struct{})
 	fmt.Println("WASM started")
-	js.Global().Set("vaultLogin", makeAsync(login))
-	js.Global().Set("vaultGetMasterSecret", js.FuncOf(getMasterSecret))
-	js.Global().Set("test",js.ValueOf("foo"))
+	vaultInterface := make(map[string]interface{})
+	vaultInterface["login"] = makeAsync(login)
+	vaultInterface["getMasterSecret"] = js.FuncOf(getMasterSecret)
+	js.Global().Set("vaultInterface", js.ValueOf(vaultInterface))
 	<-c
 }
