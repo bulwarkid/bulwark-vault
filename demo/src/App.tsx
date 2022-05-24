@@ -33,7 +33,7 @@ export class App extends React.Component<{}, AppState> {
             masterSecret={this.state.masterSecret}
             onLogout={this.onLogout}
           />
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 items-center">
             <StoreData onSubmit={this.onStore} />
             <KeyDirectoryDisplay keyDirectory={this.state.keyDirectory} />
           </div>

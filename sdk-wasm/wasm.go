@@ -48,11 +48,11 @@ func getKeyDirectory(this js.Value, args []js.Value) any {
 	if vault == nil {
 		return js.ValueOf(nil)
 	}
-	json, err := vault.KeyDirectory().Json()
+	jsonData, err := vault.KeyDirectory().Json()
 	if err != nil {
 		return js.ValueOf(nil)
 	}
-	return js.ValueOf(json)
+	return js.ValueOf(jsonData)
 }
 
 func put(this js.Value, args []js.Value) any {

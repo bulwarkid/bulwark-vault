@@ -47,7 +47,7 @@ func (directory *KeyDirectory) Json() (string, error) {
 		encryptionKeyEncoded := base64.URLEncoding.EncodeToString(accessData.encryptionKey)
 		keyDirectoryJson[path] = AccessDataJson{AccessKey: accessData.accessKey, EncryptionKey: encryptionKeyEncoded}
 	}
-	jsonData, err := json.Marshal(keyDirectoryJson)
+	jsonData, err := json.MarshalIndent(keyDirectoryJson, "", "    ")
 	if err != nil {
 		return "", fmt.Errorf("Could not encode JSON: %w", err)
 	}
