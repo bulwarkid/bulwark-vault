@@ -11,7 +11,7 @@ export class StoreData extends React.Component<StoreDataProps> {
 
   render() {
     return (
-      <div className="card shadow-xl bg-base-100">
+      <div className="card shadow-xl bg-base-100 w-max">
         <div className="card-body items-center">
           <div className="card-title">Store Data</div>
           <TextInput

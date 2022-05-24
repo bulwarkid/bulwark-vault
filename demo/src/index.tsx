@@ -4,7 +4,8 @@ import "./style/tailwind.css";
 import "./style/index.css";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { load } from "./wasm/loadWasm";
+import * as debug from "./debug";
+import * as loadWasm from "./wasm/loadWasm";
 import * as wasmApi from "./wasm/wasmApi";
 
 const root = ReactDOM.createRoot(
@@ -22,7 +23,8 @@ root.render(
 reportWebVitals();
 
 wasmApi.setApi();
+debug.init();
 
 setTimeout(() => {
-  load();
+  loadWasm.load();
 }, 0);

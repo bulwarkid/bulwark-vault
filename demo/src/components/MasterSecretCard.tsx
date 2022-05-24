@@ -50,7 +50,16 @@ export class MasterSecretCard extends React.Component<MasterSecretCardProps> {
             <ColorCodedBase64 text={this.props.masterSecret} />
           </div>
           <div className="card-actions justify-end">
-            <div className="btn btn-error btn-sm">Log Out</div>
+            <div
+              className="btn btn-error btn-sm"
+              onClick={() => {
+                if (this.props.onLogout) {
+                  this.props.onLogout();
+                }
+              }}
+            >
+              Log Out
+            </div>
           </div>
         </div>
       </div>
