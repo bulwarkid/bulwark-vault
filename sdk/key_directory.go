@@ -45,14 +45,12 @@ func (directory *KeyDirectory) Json() (string, error) {
 	var keyDirectoryJson map[string]AccessDataJson = make(map[string]AccessDataJson)
 	for path, accessData := range *directory.values {
 		encryptionKeyEncoded := base64.URLEncoding.EncodeToString(accessData.encryptionKey)
-		fmt.Println(encryptionKeyEncoded)
 		keyDirectoryJson[path] = AccessDataJson{AccessKey: accessData.accessKey, EncryptionKey: encryptionKeyEncoded}
 	}
 	jsonData, err := json.Marshal(keyDirectoryJson)
 	if err != nil {
 		return "", fmt.Errorf("Could not encode JSON: %w", err)
 	}
-	fmt.Println(string(jsonData))
 	return string(jsonData), nil
 }
 
@@ -82,7 +80,7 @@ func (directory *KeyDirectory) store() error {
 	if err != nil {
 		return fmt.Errorf("Could not encode JSON: %w", err)
 	}
-	if err = writeObjectByPath(directory.masterSecret, "/master-secret", string(jsonData)); err != nil {
+	if err = writeObjectByPath(directory.masterSecret, "/directory", string(jsonData)); err != nil {
 		return fmt.Errorf("Could not write key directory: %w", err)
 	}
 	return nil
