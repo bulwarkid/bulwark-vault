@@ -33,10 +33,11 @@ export class App extends React.Component<{}, AppState> {
             masterSecret={this.state.masterSecret}
             onLogout={this.onLogout}
           />
-          <div className="flex space-x-4 items-center">
+          <div className="flex space-x-4">
             <StoreData onSubmit={this.onStore} />
-            <KeyDirectoryDisplay keyDirectory={this.state.keyDirectory} />
+            <ReadData onRead={this.onRead} />
           </div>
+          <KeyDirectoryDisplay keyDirectory={this.state.keyDirectory} />
         </div>
       );
     }
@@ -65,5 +66,9 @@ export class App extends React.Component<{}, AppState> {
     await vault.put(path, data);
     const keyDirectory = await vault.getKeyDirectory();
     this.setState({ keyDirectory });
+  };
+
+  onRead = async (path: string) => {
+    return await vault.get(path);
   };
 }
