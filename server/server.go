@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
@@ -90,7 +91,34 @@ func getObject(objectId string) (string, error) {
 }
 
 func writeObject(objectId string, objectData string) error {
-	_, err := db.Exec(`INSERT INTO objects(object_id,object_data) values($1,$2)`, objectId, objectData)
+	ctx := context.Background()
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	row := tx.QueryRowContext(ctx, `SELECT object_data FROM objects WHERE object_id=$1`, objectId)
+	var oldData string
+	err = row.Scan(&oldData)
+	if err != nil && err != sql.ErrNoRows{
+		tx.Rollback()
+		return err
+	}
+	if err != sql.ErrNoRows {
+		_, err := tx.ExecContext(ctx,`UPDATE objects SET object_data=$1 WHERE object_id=$2`, objectData, objectId)
+		if err != nil {
+			fmt.Println("Rolling back:",err)
+			tx.Rollback()
+			return err
+		}
+	} else {
+		_, err := tx.Exec(`INSERT INTO objects(object_id,object_data) values($1,$2)`, objectId, objectData)
+		if err != nil {
+			fmt.Println("Rolling back:",err)
+			tx.Rollback()
+			return err
+		}
+	}
+	err = tx.Commit()
 	if err != nil {
 		return err
 	}
