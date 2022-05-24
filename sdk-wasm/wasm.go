@@ -44,12 +44,51 @@ func getMasterSecret(this js.Value, args []js.Value) any {
 	return vault.MasterSecret()
 }
 
+func getKeyDirectory(this js.Value, args []js.Value) any {
+	if vault == nil {
+		return js.ValueOf(nil)
+	}
+	json, err := vault.KeyDirectory().Json()
+	if err != nil {
+		return js.ValueOf(nil)
+	}
+	return js.ValueOf(json)
+}
+
+func put(this js.Value, args []js.Value) any {
+	if vault == nil {
+		return js.ValueOf(nil)
+	}
+	path := args[0].String()
+	data := args[1].String()
+	err := vault.Put(path, data)
+	if err != nil {
+		return js.ValueOf(nil)
+	}
+	return js.ValueOf("Success")
+}
+
+func get(this js.Value, args []js.Value) any {
+	if vault == nil {
+		return js.ValueOf(nil)
+	}
+	path := args[0].String()
+	data, err := vault.Get(path)
+	if err != nil {
+		return js.ValueOf(nil)
+	}
+	return js.ValueOf(data)
+}
+
 func main() {
 	c := make(chan struct{})
 	fmt.Println("WASM started")
 	vaultInterface := make(map[string]interface{})
 	vaultInterface["login"] = makeAsync(login)
-	vaultInterface["getMasterSecret"] = js.FuncOf(getMasterSecret)
+	vaultInterface["getMasterSecret"] = makeAsync(getMasterSecret)
+	vaultInterface["getKeyDirectory"] = makeAsync(getKeyDirectory)
+	vaultInterface["get"] = makeAsync(get)
+	vaultInterface["put"] = makeAsync(put)
 	js.Global().Set("vaultInterface", js.ValueOf(vaultInterface))
 	<-c
 }

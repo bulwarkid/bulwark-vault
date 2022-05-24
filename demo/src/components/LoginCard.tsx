@@ -15,7 +15,11 @@ export class LoginCard extends React.Component<LoginCardProps> {
         <div className="card-body items-center">
           <div className="card-title text-center items-center">Log In</div>
           <TextInput ref={this.usernameRef} placeholder="Username" />
-          <TextInput ref={this.passwordRef} placeholder="Password" />
+          <TextInput
+            ref={this.passwordRef}
+            placeholder="Password"
+            type="password"
+          />
 
           <button
             className="btn btn-primary"

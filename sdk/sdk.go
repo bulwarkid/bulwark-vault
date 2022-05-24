@@ -68,3 +68,7 @@ func (vault *VaultAccess) MasterSecret() string {
 	}
 	return base64.URLEncoding.EncodeToString(vault.masterSecret)
 }
+
+func (vault *VaultAccess) KeyDirectory() *KeyDirectory {
+	return vault.keyDirectory
+}

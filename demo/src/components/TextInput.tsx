@@ -3,6 +3,7 @@ import React from "react";
 type TextInputProps = {
   label?: string;
   placeholder: string;
+  type?: string;
 };
 
 export class TextInput extends React.Component<TextInputProps> {
@@ -14,7 +15,7 @@ export class TextInput extends React.Component<TextInputProps> {
   render() {
     const input = (
       <input
-        type="text"
+        type={this.props.type ?? "text"}
         placeholder={this.props.placeholder}
         className="input input-bordered w-full max-w-s"
         onChange={(e) => {

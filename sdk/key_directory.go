@@ -37,8 +37,23 @@ func newKeyDirectory(masterSecret []byte) *KeyDirectory {
 }
 
 type AccessDataJson struct {
-	accessKey     string
-	encryptionKey string
+	AccessKey     string `json:"accessKey"`
+	EncryptionKey string `json:"encryptionKey"`
+}
+
+func (directory *KeyDirectory) Json() (string, error) {
+	var keyDirectoryJson map[string]AccessDataJson = make(map[string]AccessDataJson)
+	for path, accessData := range *directory.values {
+		encryptionKeyEncoded := base64.URLEncoding.EncodeToString(accessData.encryptionKey)
+		fmt.Println(encryptionKeyEncoded)
+		keyDirectoryJson[path] = AccessDataJson{AccessKey: accessData.accessKey, EncryptionKey: encryptionKeyEncoded}
+	}
+	jsonData, err := json.Marshal(keyDirectoryJson)
+	if err != nil {
+		return "", fmt.Errorf("Could not encode JSON: %w", err)
+	}
+	fmt.Println(string(jsonData))
+	return string(jsonData), nil
 }
 
 func (directory *KeyDirectory) load() error {
@@ -52,23 +67,18 @@ func (directory *KeyDirectory) load() error {
 	}
 	values := make(map[string]*AccessData)
 	for path, accessDataJson := range keyDirectoryJson {
-		encryptionKeyDecoded, err := base64.URLEncoding.DecodeString(accessDataJson.encryptionKey)
+		encryptionKeyDecoded, err := base64.URLEncoding.DecodeString(accessDataJson.EncryptionKey)
 		if err != nil {
 			return fmt.Errorf("Error decoding encryption keys: %w", err)
 		}
-		values[path] = &AccessData{accessKey: accessDataJson.accessKey, encryptionKey: encryptionKeyDecoded}
+		values[path] = &AccessData{accessKey: accessDataJson.AccessKey, encryptionKey: encryptionKeyDecoded}
 	}
 	directory.values = &values
 	return nil
 }
 
 func (directory *KeyDirectory) store() error {
-	var keyDirectoryJson map[string]AccessDataJson = make(map[string]AccessDataJson)
-	for path, accessData := range *directory.values {
-		encryptionKeyEncoded := base64.URLEncoding.EncodeToString(accessData.encryptionKey)
-		keyDirectoryJson[path] = AccessDataJson{accessKey: accessData.accessKey, encryptionKey: encryptionKeyEncoded}
-	}
-	jsonData, err := json.Marshal(keyDirectoryJson)
+	jsonData, err := directory.Json()
 	if err != nil {
 		return fmt.Errorf("Could not encode JSON: %w", err)
 	}
