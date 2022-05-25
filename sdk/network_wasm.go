@@ -1,3 +1,6 @@
+//go:build js
+// +build js
+
 package sdk
 
 import (
@@ -40,7 +43,7 @@ func request(method, path, data string) (string, error) {
 	return "", fmt.Errorf("Could not read response")
 }
 
-func post(path, data string) (string, error) {
+func post(path, dataType, data string) (string, error) {
 	return request("POST", path, data)
 }
 
