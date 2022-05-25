@@ -1,13 +1,13 @@
-// +build darwin linux
+//go:build !js && !wasm
 
 package sdk
 
 import (
-       "errors"
-       "fmt"
-       "io/ioutil"
-       "net/http"
-       "strings"
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 const BASE_URL = "http://localhost:8080"
