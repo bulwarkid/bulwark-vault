@@ -224,5 +224,5 @@ func main() {
 
 	http.HandleFunc("/vault/salt/", requestHandler(handleSalt, nil))
 	http.HandleFunc("/vault/object/", requestHandler(handleObjectGet, handleObjectPost))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":5001", nil))
 }

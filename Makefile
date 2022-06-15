@@ -1,6 +1,7 @@
 wasm:
 	GOOS=js GOARCH=wasm go build -o demo/public/main.wasm ./sdk-wasm/wasm.go
-build/server:
+build:
+	rm build/*
 	go build -o build/server ./server/server.go
 setup-db:
 	sudo -u postgres bash -c "psql < ./server/setup.sql"

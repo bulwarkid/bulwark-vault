@@ -1,0 +1,11 @@
+[Unit]
+Description=BulwarkID Vault
+Requires=Network.target
+After=Network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/bulwarkid/bulwark-vault/build/server
+
+[Install]
+WantedBy=multi-user.target
