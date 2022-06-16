@@ -135,6 +135,7 @@ type httpHandler func(w http.ResponseWriter, r *http.Request)
 
 func requestHandler(getHandler httpHandler, postHandler httpHandler) httpHandler {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("%s - %s: %s",r.RemoteAddr, r.Method,r.URL.Path)
 		w.Header().Add("Access-Control-Allow-Origin","*")
 		switch r.Method {
 		case "GET":
