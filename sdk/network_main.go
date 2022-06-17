@@ -27,6 +27,7 @@ func isReturnCode(err error, code int) bool {
 }
 
 func get(path string) (string, error) {
+        fmt.Println("Requesting through Go")
 	response, err := http.Get(BASE_URL + path)
        if err != nil {
                return "", err
@@ -42,6 +43,7 @@ func get(path string) (string, error) {
 }
 
 func post(path string, dataType string, data string) (string, error) {
+        fmt.Println("Posting through Go")
        response, err := http.Post(BASE_URL+path, dataType, strings.NewReader(data))
        if err != nil {
                return "", err
