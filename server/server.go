@@ -175,6 +175,7 @@ func handleSalt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		salt, err = generateSalt(saltId)
 		if err != nil {
+			fmt.Println("Error: ", err)
 			returnCode(w, 500)
 			return
 		}
