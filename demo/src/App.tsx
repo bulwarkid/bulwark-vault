@@ -43,6 +43,9 @@ export class App extends React.Component<{}, AppState> {
     }
     return (
       <div className="w-full h-full flex justify-center items-center flex-col">
+        <div className="w-full h-32 absolute top-8 left-8">
+          <img src="company-name.png" width="194" height="59"></img>
+        </div>
         {content}
       </div>
     );
