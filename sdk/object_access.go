@@ -7,22 +7,15 @@ import (
 )
 
 const ACCESS_KEY_LENGTH = 32
-const ENCRYPTION_KEY_LENGTH = 32
 
-func randomAccessKey() (string, error) {
+type AccessKey string
+
+func randomAccessKey() (AccessKey, error) {
 	bytes, err := randomBytes(ACCESS_KEY_LENGTH)
 	if err != nil {
 		return "", fmt.Errorf("Could not generate access key: %w", err)
 	}
-	return base64.URLEncoding.EncodeToString(bytes), nil
-}
-
-func randomEncryptionKey() ([]byte, error) {
-	bytes, err := randomBytes(ENCRYPTION_KEY_LENGTH)
-	if err != nil {
-		return nil, fmt.Errorf("Could not generate encryption key: %w", err)
-	}
-	return bytes, nil
+	return AccessKey(base64.URLEncoding.EncodeToString(bytes)), nil
 }
 
 func saltId(data string) string {
@@ -74,22 +67,13 @@ func decodeBlob(blobJson string) ([]byte, []byte, error) {
 	return blobBytes, ivBytes, nil
 }
 
-func deterministicObjectAccessKey(secret []byte, path string) (string, error) {
+func deterministicObjectAccessKey(secret []byte, path string) (AccessKey, error) {
 	secretString := base64.URLEncoding.EncodeToString(secret)
 	bytes, err := bytesFromHighEntropy("object_access_key:"+secretString+":"+path, ACCESS_KEY_LENGTH)
 	if err != nil {
 		return "", fmt.Errorf("Could not generate access key: %w", err)
 	}
-	return base64.URLEncoding.EncodeToString(bytes), nil
-}
-
-func deterministicObjectEncryptionKey(secret []byte, path string) ([]byte, error) {
-	secretString := base64.URLEncoding.EncodeToString(secret)
-	bytes, err := bytesFromHighEntropy("object_encryption_key:"+secretString+":"+path, ENCRYPTION_KEY_LENGTH)
-	if err != nil {
-		return nil, fmt.Errorf("Could not generate encryption key: %w", err)
-	}
-	return bytes, nil
+	return AccessKey(base64.URLEncoding.EncodeToString(bytes)), nil
 }
 
 func getObjectByPath(secret []byte, path string) (string, error) {
@@ -104,8 +88,8 @@ func getObjectByPath(secret []byte, path string) (string, error) {
 	return getObject(accessKey, encryptionKey)
 }
 
-func getObject(accessKey string, encryptionKey []byte) (string, error) {
-	objectBase64, err := get("/vault/object/" + accessKey)
+func getObject(accessKey AccessKey, encryptionKey AESEncryptionKey) (string, error) {
+	objectBase64, err := get("/vault/object/" + string(accessKey))
 	if err != nil {
 		return "", fmt.Errorf("Could not retrieve object data: %w", err)
 	}
@@ -136,7 +120,7 @@ func writeObjectByPath(secret []byte, path string, data string) error {
 	return writeObject(accessKey, encryptionKey, data)
 }
 
-func writeObject(accessKey string, encryptionKey []byte, data string) error {
+func writeObject(accessKey AccessKey, encryptionKey AESEncryptionKey, data string) error {
 	encryptedBytes, iv, err := encryptBytes([]byte(data), encryptionKey)
 	if err != nil {
 		return fmt.Errorf("Could not encrypt data: %w", err)
@@ -146,7 +130,7 @@ func writeObject(accessKey string, encryptionKey []byte, data string) error {
 		return fmt.Errorf("Could not create json: %w", err)
 	}
 	objectBase64 := base64.URLEncoding.EncodeToString([]byte(blobJson))
-	_, err = post("/vault/object/"+accessKey, "text/plain", objectBase64)
+	_, err = post("/vault/object/"+string(accessKey), "text/plain", objectBase64)
 	if err != nil {
 		return fmt.Errorf("Could not store encrypted data: %w", err)
 	}

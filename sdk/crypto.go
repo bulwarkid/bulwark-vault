@@ -1,16 +1,24 @@
 package sdk
 
 import (
+	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/ed25519"
 	"crypto/rand"
 	"crypto/sha256"
+	"encoding/base64"
+	"fmt"
 	"io"
 	"io/ioutil"
 
 	"golang.org/x/crypto/hkdf"
 	"golang.org/x/crypto/pbkdf2"
 )
+
+const ENCRYPTION_KEY_LENGTH = 32
+
+type AESEncryptionKey []byte
 
 func hashSha256(data []byte) []byte {
 	bytes := sha256.Sum256(data)
@@ -26,7 +34,24 @@ func randomBytes(length int) ([]byte, error) {
 	return bytes, nil
 }
 
-func decryptBytes(data []byte, key []byte, nonce []byte) ([]byte, error) {
+func randomEncryptionKey() (AESEncryptionKey, error) {
+	bytes, err := randomBytes(ENCRYPTION_KEY_LENGTH)
+	if err != nil {
+		return nil, fmt.Errorf("Could not generate encryption key: %w", err)
+	}
+	return AESEncryptionKey(bytes), nil
+}
+
+func deterministicObjectEncryptionKey(secret []byte, path string) (AESEncryptionKey, error) {
+	secretString := base64.URLEncoding.EncodeToString(secret)
+	bytes, err := bytesFromHighEntropy("object_encryption_key:"+secretString+":"+path, ENCRYPTION_KEY_LENGTH)
+	if err != nil {
+		return nil, fmt.Errorf("Could not generate encryption key: %w", err)
+	}
+	return AESEncryptionKey(bytes), nil
+}
+
+func decryptBytes(data []byte, key AESEncryptionKey, nonce []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -42,7 +67,7 @@ func decryptBytes(data []byte, key []byte, nonce []byte) ([]byte, error) {
 	return decryptedData, nil
 }
 
-func encryptBytes(data []byte, key []byte) ([]byte, []byte, error) {
+func encryptBytes(data []byte, key AESEncryptionKey) ([]byte, []byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, nil, err
@@ -70,4 +95,17 @@ func bytesFromHighEntropy(inputData string, length int64) ([]byte, error) {
 		return nil, err
 	}
 	return bytes, nil
+}
+
+type PublicKeyPair struct {
+	publicKey crypto.PublicKey
+	privateKey crypto.PrivateKey
+}
+
+func randomPublicKeyPair() (*PublicKeyPair, error){
+	publicKey, privateKey, err := ed25519.GenerateKey(nil)
+	if err != nil {
+		return nil, fmt.Errorf("Could not generate ed25519 key pair: %w", err)
+	}
+	return &PublicKeyPair{publicKey:publicKey,privateKey:privateKey}, nil
 }

@@ -7,8 +7,8 @@ import (
 )
 
 type AccessData struct {
-	accessKey     string
-	encryptionKey []byte
+	accessKey     AccessKey
+	encryptionKey AESEncryptionKey
 }
 
 func randomAccessData() (*AccessData, error) {
@@ -45,7 +45,7 @@ func (directory *KeyDirectory) Json() (string, error) {
 	var keyDirectoryJson map[string]AccessDataJson = make(map[string]AccessDataJson)
 	for path, accessData := range *directory.values {
 		encryptionKeyEncoded := base64.URLEncoding.EncodeToString(accessData.encryptionKey)
-		keyDirectoryJson[path] = AccessDataJson{AccessKey: accessData.accessKey, EncryptionKey: encryptionKeyEncoded}
+		keyDirectoryJson[path] = AccessDataJson{AccessKey: string(accessData.accessKey), EncryptionKey: encryptionKeyEncoded}
 	}
 	jsonData, err := json.MarshalIndent(keyDirectoryJson, "", "    ")
 	if err != nil {
@@ -69,7 +69,7 @@ func (directory *KeyDirectory) load() error {
 		if err != nil {
 			return fmt.Errorf("Error decoding encryption keys: %w", err)
 		}
-		values[path] = &AccessData{accessKey: accessDataJson.AccessKey, encryptionKey: encryptionKeyDecoded}
+		values[path] = &AccessData{accessKey: AccessKey(accessDataJson.AccessKey), encryptionKey: AESEncryptionKey(encryptionKeyDecoded)}
 	}
 	directory.values = &values
 	return nil
