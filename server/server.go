@@ -10,12 +10,11 @@ import (
 
 func main() {
 	fmt.Println("Starting vault server...")
-	var err error
-	db, err = loadDb()
+	err := loadDb()
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+	defer closeDb()
 	fmt.Println("Connected to DB!")
 
 	http.HandleFunc("/vault/salt/", requestHandler(handleSalt, nil))

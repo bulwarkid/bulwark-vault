@@ -33,7 +33,7 @@ func verifyHash(hash string) bool {
 }
 
 func getSalt(saltId string) (string, error) {
-	rows, err := db.Query(`SELECT salt FROM salts WHERE salt_id=$1`, saltId)
+	rows, err := getDb().Query(`SELECT salt FROM salts WHERE salt_id=$1`, saltId)
 	if err != nil {
 		return "", err
 	}
@@ -56,7 +56,7 @@ func generateSalt(saltId string) (string, error) {
 		return "", fmt.Errorf("Could not generate random bytes for salt")
 	}
 	salt := base64.URLEncoding.EncodeToString(saltBytes)
-	_, err = db.Exec(`INSERT INTO salts(salt_id,salt) values($1,$2)`, saltId, salt)
+	_, err = getDb().Exec(`INSERT INTO salts(salt_id,salt) values($1,$2)`, saltId, salt)
 	if err != nil {
 		return "", err
 	}

@@ -11,7 +11,7 @@ import (
 )
 
 func getObject(objectId string) (string, error) {
-	rows, err := db.Query(`SELECT object_data FROM objects WHERE object_id=$1`, objectId)
+	rows, err := getDb().Query(`SELECT object_data FROM objects WHERE object_id=$1`, objectId)
 	if err != nil {
 		return "", err
 	}
@@ -29,7 +29,7 @@ func getObject(objectId string) (string, error) {
 
 func writeObject(objectId string, objectData string) error {
 	ctx := context.Background()
-	tx, err := db.BeginTx(ctx, nil)
+	tx, err := getDb().BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
