@@ -12,7 +12,7 @@ type AuthenticatedDataJson struct {
 	Signature string `json:"signature"`
 }
 
-func getDataByPath(publicKey ed25519.PublicKey, encryptionKey AESEncryptionKey) ([]byte, error) {
+func getAuthData(publicKey ed25519.PublicKey, encryptionKey AESEncryptionKey) ([]byte, error) {
 	jsonData, err := get("/vault/authenticated_object/" + b64encode(publicKey))
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve data: %w", err)
@@ -35,7 +35,7 @@ func getDataByPath(publicKey ed25519.PublicKey, encryptionKey AESEncryptionKey) 
 	return decryptedData, nil
 }
 
-func writeDataToPath(data []byte, keyPair *PublicKeyPair, encryptionKey AESEncryptionKey) error {
+func writeAuthData(data []byte, keyPair *PublicKeyPair, encryptionKey AESEncryptionKey) error {
 	signature := signData(keyPair.privateKey, data)
 	encryptedData, nonce, err := encryptBytes(data, encryptionKey)
 	if err != nil {
