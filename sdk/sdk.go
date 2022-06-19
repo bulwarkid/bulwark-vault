@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"encoding/base64"
 	"fmt"
 )
 
@@ -11,10 +10,12 @@ type VaultAccess struct {
 }
 
 func NewVault() *VaultAccess {
+	defer recoverFromPanic()
 	return &VaultAccess{masterSecret: nil, keyDirectory: nil}
 }
 
 func (access *VaultAccess) Login(email, password string) error {
+	defer recoverFromPanic()
 	loginSecret, err := deriveLoginSecret(email, password)
 	if err != nil {
 		return err
@@ -33,6 +34,7 @@ func (access *VaultAccess) Login(email, password string) error {
 }
 
 func (access *VaultAccess) Put(path string, data string) error {
+	defer recoverFromPanic()
 	var err error
 	if access.keyDirectory == nil {
 		return fmt.Errorf("Vault isn't logged in")
@@ -48,6 +50,7 @@ func (access *VaultAccess) Put(path string, data string) error {
 }
 
 func (access *VaultAccess) Get(path string) (string, error) {
+	defer recoverFromPanic()
 	if access.keyDirectory == nil {
 		return "", fmt.Errorf("Vault isn't logged in")
 	}
@@ -63,12 +66,14 @@ func (access *VaultAccess) Get(path string) (string, error) {
 }
 
 func (vault *VaultAccess) MasterSecret() string {
+	defer recoverFromPanic()
 	if vault.masterSecret == nil {
 		return ""
 	}
-	return base64.URLEncoding.EncodeToString(vault.masterSecret)
+	return b64encode(vault.masterSecret)
 }
 
 func (vault *VaultAccess) KeyDirectory() *KeyDirectory {
+	defer recoverFromPanic()
 	return vault.keyDirectory
 }

@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 )
@@ -44,8 +43,10 @@ type AccessDataJson struct {
 func (directory *KeyDirectory) Json() (string, error) {
 	var keyDirectoryJson map[string]AccessDataJson = make(map[string]AccessDataJson)
 	for path, accessData := range *directory.values {
-		encryptionKeyEncoded := base64.URLEncoding.EncodeToString(accessData.encryptionKey)
-		keyDirectoryJson[path] = AccessDataJson{AccessKey: string(accessData.accessKey), EncryptionKey: encryptionKeyEncoded}
+		keyDirectoryJson[path] = AccessDataJson{
+			AccessKey:     string(accessData.accessKey),
+			EncryptionKey: b64encode(accessData.encryptionKey),
+		}
 	}
 	jsonData, err := json.MarshalIndent(keyDirectoryJson, "", "    ")
 	if err != nil {
@@ -65,10 +66,7 @@ func (directory *KeyDirectory) load() error {
 	}
 	values := make(map[string]*AccessData)
 	for path, accessDataJson := range keyDirectoryJson {
-		encryptionKeyDecoded, err := base64.URLEncoding.DecodeString(accessDataJson.EncryptionKey)
-		if err != nil {
-			return fmt.Errorf("Error decoding encryption keys: %w", err)
-		}
+		encryptionKeyDecoded := b64decode(accessDataJson.EncryptionKey)
 		values[path] = &AccessData{accessKey: AccessKey(accessDataJson.AccessKey), encryptionKey: AESEncryptionKey(encryptionKeyDecoded)}
 	}
 	directory.values = &values

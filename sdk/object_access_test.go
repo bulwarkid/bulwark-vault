@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"encoding/base64"
 	"reflect"
 	"testing"
 )
@@ -26,7 +25,7 @@ func TestGetObject(t *testing.T) {
 	masterSecret := testMasterSecret(t)
 	bytes, err := randomBytes(32)
 	checkTestError(t, err, "Could not generate bytes")
-	objectData := base64.URLEncoding.EncodeToString(bytes)
+	objectData := b64encode(bytes)
 	err = writeObjectByPath(masterSecret, "/test", objectData)
 	checkTestError(t, err, "Could not write object")
 	returnedData, err := getObjectByPath(masterSecret, "/test")

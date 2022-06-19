@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"encoding/base64"
 	"fmt"
 )
 
@@ -26,17 +25,13 @@ func getMasterSecret(loginSecret []byte) ([]byte, error) {
 		if err != nil {
 			return nil, fmt.Errorf("Could not generate random bytes: %w", err)
 		}
-		secretBase64 = base64.URLEncoding.EncodeToString(secretBytes)
-		if err = writeObjectByPath(loginSecret, "/master-secret", secretBase64); err != nil {
+		secretBase64 = b64encode(secretBytes)
+		if err = writeObjectByPath(loginSecret, "/master-secret", b64encode(secretBytes)); err != nil {
 			return nil, fmt.Errorf("Could not write master secret: %w", err)
 		}
 		return secretBytes, nil
 	}
-	masterSecret, err := base64.URLEncoding.DecodeString(secretBase64)
-	if err != nil {
-		return nil, fmt.Errorf("Invalid master secret returned from vault: %w", err)
-	}
-	return masterSecret, nil
+	return b64decode(secretBase64), nil
 }
 
 func newMasterSecret() ([]byte, error) {
