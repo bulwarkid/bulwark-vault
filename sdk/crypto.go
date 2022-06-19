@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/ed25519"
@@ -98,14 +97,22 @@ func bytesFromHighEntropy(inputData string, length int64) ([]byte, error) {
 }
 
 type PublicKeyPair struct {
-	publicKey crypto.PublicKey
-	privateKey crypto.PrivateKey
+	publicKey  ed25519.PublicKey
+	privateKey ed25519.PrivateKey
 }
 
-func randomPublicKeyPair() (*PublicKeyPair, error){
+func randomPublicKeyPair() (*PublicKeyPair, error) {
 	publicKey, privateKey, err := ed25519.GenerateKey(nil)
 	if err != nil {
 		return nil, fmt.Errorf("Could not generate ed25519 key pair: %w", err)
 	}
-	return &PublicKeyPair{publicKey:publicKey,privateKey:privateKey}, nil
+	return &PublicKeyPair{publicKey: publicKey, privateKey: privateKey}, nil
+}
+
+func signData(privateKey ed25519.PrivateKey, data []byte) []byte {
+	return ed25519.Sign(privateKey, data)
+}
+
+func verifySignature(publicKey ed25519.PublicKey, data []byte, signature []byte) bool {
+	return ed25519.Verify(publicKey, data, signature)
 }

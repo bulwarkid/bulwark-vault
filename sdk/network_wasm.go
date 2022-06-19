@@ -30,7 +30,7 @@ func isReturnCode(err error, code int) bool {
 
 func request(method, path, data string) (string, error) {
 	request := js.Global().Get("wasmApi").Get("request")
-	output, _ := await(request.Invoke(js.ValueOf(method), js.ValueOf(BASE_URL + path), data))
+	output, _ := await(request.Invoke(js.ValueOf(method), js.ValueOf(BASE_URL+path), data))
 	if output != nil {
 		responseText := output.Get("data").String()
 		statusCode := output.Get("code").Int()
