@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const BASE_URL = "http://localhost:8080"
+const BASE_URL = "http://localhost:5001"
 
 type UnsuccessfulRequestError struct {
 	code     int
