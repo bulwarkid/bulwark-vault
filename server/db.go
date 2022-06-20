@@ -13,32 +13,33 @@ const (
 	dbname   = "vault"
 )
 
-var db *sql.DB
+var internalDb *sql.DB
 
 func loadDb() error {
 	psqlConn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlConn)
+	var err error
+	internalDb, err = sql.Open("postgres", psqlConn)
 	if err != nil {
-		db = nil
+		internalDb = nil
 		return err
 	}
-	err = db.Ping()
+	err = internalDb.Ping()
 	if err != nil {
-		db = nil
+		internalDb = nil
 		return err
 	}
 	return nil
 }
 
 func closeDb() {
-	if db != nil {
-		db.Close()
+	if internalDb != nil {
+		internalDb.Close()
 	}
 }
 
 func getDb() *sql.DB {
-	if db == nil {
+	if internalDb == nil {
 		panic("Trying to access DB before connection established!")
 	}
-	return db
+	return internalDb
 }

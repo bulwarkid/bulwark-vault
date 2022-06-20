@@ -36,11 +36,11 @@ func getAuthData(publicKey ed25519.PublicKey, encryptionKey AESEncryptionKey) ([
 }
 
 func writeAuthData(data []byte, keyPair *PublicKeyPair, encryptionKey AESEncryptionKey) error {
-	signature := signData(keyPair.privateKey, data)
 	encryptedData, nonce, err := encryptBytes(data, encryptionKey)
 	if err != nil {
 		return fmt.Errorf("Could not encrypt bytes: %w", err)
 	}
+	signature := signData(keyPair.privateKey, encryptedData)
 	jsonData, err := json.MarshalIndent(
 		AuthenticatedDataJson{
 			Data:      b64encode(encryptedData),

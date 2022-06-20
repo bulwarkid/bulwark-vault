@@ -39,8 +39,8 @@ type EncryptedBlob struct {
 func encodeBlob(blob []byte, iv []byte) (string, error) {
 	blobJson, err := json.Marshal(
 		&EncryptedBlob{
-			Blob: b64encode(blob), 
-			Iv: b64encode(iv),
+			Blob: b64encode(blob),
+			Iv:   b64encode(iv),
 		})
 	if err != nil {
 		return "", err

@@ -19,5 +19,6 @@ func main() {
 
 	http.HandleFunc("/vault/salt/", requestHandler(handleSalt, nil))
 	http.HandleFunc("/vault/object/", requestHandler(handleObjectGet, handleObjectPost))
+	http.HandleFunc("/vault/authenticated_object/", requestHandler(handleAuthDataGet, handleAuthDataPost))
 	log.Fatal(http.ListenAndServe(":5001", nil))
 }
