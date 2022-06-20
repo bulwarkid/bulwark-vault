@@ -14,8 +14,8 @@ import (
 )
 
 type AuthDataJson struct {
-	Data string `json:"data"`
-	Iv string `json:"iv"`
+	Data      string `json:"data"`
+	Iv        string `json:"iv"`
 	Signature string `json:"signature"`
 }
 
@@ -54,7 +54,7 @@ func getAuthData(publicKeyBase64 string) (string, error) {
 		var jsonBlob string
 		err = rows.Scan(&jsonBlob)
 		if err != nil {
-			return "", fmt.Errorf("Could not read values in row: %w",err)
+			return "", fmt.Errorf("Could not read values in row: %w", err)
 		}
 		return jsonBlob, nil
 	}
@@ -62,7 +62,7 @@ func getAuthData(publicKeyBase64 string) (string, error) {
 }
 
 func writeAuthData(publicKeyBase64 string, jsonBlob string) error {
-	verified, err := verifyData(jsonBlob,publicKeyBase64)
+	verified, err := verifyData(jsonBlob, publicKeyBase64)
 	if err != nil || !verified {
 		return fmt.Errorf("Could not verify signature on authenticated data")
 	}
@@ -105,7 +105,7 @@ func handleAuthDataGet(w http.ResponseWriter, r *http.Request) {
 	publicKeyBase64 := pathParts[len(pathParts)-1]
 	jsonBlob, err := getAuthData(publicKeyBase64)
 	if err != nil {
-		fmt.Printf("Server error: %s\n",err)
+		fmt.Printf("Server error: %s\n", err)
 		returnCode(w, 500)
 		return
 	}
@@ -113,7 +113,7 @@ func handleAuthDataGet(w http.ResponseWriter, r *http.Request) {
 		returnCode(w, 404)
 		return
 	}
-	verified, err := verifyData(jsonBlob,publicKeyBase64)
+	verified, err := verifyData(jsonBlob, publicKeyBase64)
 	if err != nil || !verified {
 		returnCode(w, 403)
 		return
@@ -130,9 +130,9 @@ func handleAuthDataPost(w http.ResponseWriter, r *http.Request) {
 		returnCode(w, 400)
 		return
 	}
-	verified, err := verifyData(string(jsonBlob),publicKeyBase64)
+	verified, err := verifyData(string(jsonBlob), publicKeyBase64)
 	if err != nil || !verified {
-		fmt.Printf("Could not verify authenticated data: %s %v\n", err,verified)
+		fmt.Printf("Could not verify authenticated data: %s %v\n", err, verified)
 		returnCode(w, 403)
 		return
 	}

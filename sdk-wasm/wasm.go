@@ -18,14 +18,14 @@ func makeAsync(executor func(js.Value, []js.Value) any) js.Func {
 		})
 		promiseConstructor := js.Global().Get("Promise")
 		return promiseConstructor.New(executor)
-	});
+	})
 }
 
 var vault *sdk.VaultAccess = nil
 
 func login(this js.Value, args []js.Value) any {
 	if len(args) != 2 {
-		return "";
+		return ""
 	}
 	email := args[0].String()
 	password := args[1].String()
@@ -34,7 +34,7 @@ func login(this js.Value, args []js.Value) any {
 	if err != nil {
 		return fmt.Sprintf("Error logging into vault: %s", err)
 	}
-	return "";
+	return ""
 }
 
 func getMasterSecret(this js.Value, args []js.Value) any {
