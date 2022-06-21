@@ -3,6 +3,7 @@ import { getAuthData } from "../wasm/vault";
 import { setImmediate } from "../util";
 import { TextDisplay } from "./TextDisplay";
 import { Card } from "./Card";
+import { Label } from "./Label";
 
 type ViewShareLinkProps = {
     rawFragment: string;
@@ -52,7 +53,9 @@ export class ViewShareLink extends React.Component<
                     inlineLabel="Encryption Key"
                     text={encryptionKeyBase64}
                 />
-                <TextDisplay label="Data" text={this.state.data} />
+                <Label label="Data">
+                    <TextDisplay text={this.state.data} />
+                </Label>
             </Card>
         );
     }

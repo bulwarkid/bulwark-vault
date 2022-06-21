@@ -12,7 +12,6 @@ export class ShareData extends React.Component {
         return (
             <div className="flex gap-8">
                 <CreateShareLink />
-                <ViewShareLink rawFragment={fragment} />
             </div>
         );
     }

@@ -1,7 +1,6 @@
 import React from "react";
 
 type TextDisplayProps = {
-    label?: string;
     inlineLabel?: string;
     text?: string;
 };
@@ -9,24 +8,17 @@ type TextDisplayProps = {
 export class TextDisplay extends React.Component<TextDisplayProps> {
     render() {
         const text = (
-            <div className="input input-bordered input-md flex items-center overflow-x">
+            <div className="input input-bordered input-md flex items-center overflow-x-scroll whitespace-nowrap">
                 {this.props.text}
             </div>
         );
-        if (this.props.inlineLabel)
+        if (this.props.inlineLabel) {
             return (
-                <label className="input-group">
-                    <span>{this.props.inlineLabel}</span>
-                    {text}
-                </label>
-            );
-        else if (this.props.label) {
-            return (
-                <div className="form-control w-full max-w-xs">
-                    <label className="label">
-                        <span className="label-text">{this.props.label}</span>
+                <div className="form-control">
+                    <label className="input-group whitespace-nowrap">
+                        <span>{this.props.inlineLabel}</span>
+                        {text}
                     </label>
-                    {text}
                 </div>
             );
         } else {

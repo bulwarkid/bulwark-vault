@@ -1,23 +1,22 @@
 import React from "react";
 
-type TextInputProps = {
+type TextAreaProps = {
     label?: string;
     placeholder: string;
     type?: string;
 };
 
-export class TextInput extends React.Component<TextInputProps> {
+export class TextArea extends React.Component<TextAreaProps> {
     data: string;
-    constructor(props: TextInputProps) {
+    constructor(props: TextAreaProps) {
         super(props);
         this.data = "";
     }
     render() {
         return (
-            <input
-                type={this.props.type ?? "text"}
+            <textarea
                 placeholder={this.props.placeholder}
-                className="input input-bordered w-full max-w-sm"
+                className="textarea textarea-bordered w-full max-w-s"
                 onChange={(e) => {
                     this.data = e.target.value;
                 }}
