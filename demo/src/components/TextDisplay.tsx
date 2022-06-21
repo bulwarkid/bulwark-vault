@@ -9,7 +9,7 @@ type TextDisplayProps = {
 export class TextDisplay extends React.Component<TextDisplayProps> {
     render() {
         const text = (
-            <div className="input input-bordered input-md flex items-center">
+            <div className="input input-bordered input-md flex items-center overflow-x">
                 {this.props.text}
             </div>
         );

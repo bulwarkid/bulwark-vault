@@ -10,7 +10,7 @@ export class ShareData extends React.Component {
             fragment = fragment.substring(1); // Remove '#' from start
         }
         return (
-            <div className="flex">
+            <div className="flex gap-8">
                 <CreateShareLink />
                 <ViewShareLink rawFragment={fragment} />
             </div>

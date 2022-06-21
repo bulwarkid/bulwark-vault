@@ -1,3 +1,5 @@
+//go:build js && wasm
+
 package main
 
 import (
@@ -87,7 +89,20 @@ func getAuthData(this js.Value, args []js.Value) any {
 	if err != nil {
 		return js.ValueOf(nil)
 	}
-	return js.ValueOf(data)
+	return js.ValueOf(string(data))
+}
+
+func createAuthData(this js.Value, args []js.Value) any {
+	data := args[0].String()
+	publicKey, privateKey, encryptionKey, err := sdk.CreateAuthData(data)
+	if err != nil {
+		return js.ValueOf(nil)
+	}
+	values := make(map[string]interface{})
+	values["publicKey"] = js.ValueOf(publicKey)
+	values["privateKey"] = js.ValueOf(privateKey)
+	values["encryptionKey"] = js.ValueOf(encryptionKey)
+	return js.ValueOf(values)
 }
 
 func main() {
@@ -100,6 +115,7 @@ func main() {
 	vaultInterface["get"] = makeAsync(get)
 	vaultInterface["put"] = makeAsync(put)
 	vaultInterface["getAuthData"] = makeAsync(getAuthData)
+	vaultInterface["createAuthData"] = makeAsync(createAuthData)
 	js.Global().Set("vaultInterface", js.ValueOf(vaultInterface))
 	<-c
 }

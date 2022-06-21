@@ -87,3 +87,19 @@ func GetAuthData(publicKeyBase64 string, encryptionKeyBase64 string) ([]byte,err
 	}
 	return bytes, nil
 }
+
+func CreateAuthData(data string) (string, string, string, error) {
+	publicKeyPair, err := randomPublicKeyPair()
+	if err != nil {
+		return "", "", "", fmt.Errorf("Could not generate public key: %w", err)
+	}
+	encryptionKey, err := randomEncryptionKey()
+	if err != nil {
+		return "", "", "", fmt.Errorf("Could not generate encryption key: %w", err)
+	}
+	err = writeAuthData([]byte(data), publicKeyPair, encryptionKey)
+	if err != nil {
+		return "", "", "", fmt.Errorf("Could not write authenticated data: %w", err)
+	}
+	return b64encode(publicKeyPair.publicKey), b64encode(publicKeyPair.privateKey), b64encode(encryptionKey), nil
+}
