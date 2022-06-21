@@ -77,3 +77,13 @@ func (vault *VaultAccess) KeyDirectory() *KeyDirectory {
 	defer recoverFromPanic()
 	return vault.keyDirectory
 }
+
+func GetAuthData(publicKeyBase64 string, encryptionKeyBase64 string) ([]byte,error) {
+	publicKey := b64decode(publicKeyBase64)
+	encryptionKey := b64decode(encryptionKeyBase64)
+	bytes, err := getAuthData(publicKey,encryptionKey)
+	if err != nil {
+		return nil, fmt.Errorf("Could not retrieve Auth Data: %w",err)
+	}
+	return bytes, nil
+}

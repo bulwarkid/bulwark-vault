@@ -8,7 +8,7 @@ import (
 	"syscall/js"
 )
 
-const BASE_URL = "https://api.bulwark.id/0"
+const BASE_URL = "http://localhost:5001"
 
 type UnsuccessfulRequestError struct {
 	code     int

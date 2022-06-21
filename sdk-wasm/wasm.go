@@ -80,6 +80,16 @@ func get(this js.Value, args []js.Value) any {
 	return js.ValueOf(data)
 }
 
+func getAuthData(this js.Value, args []js.Value) any {
+	publicKey := args[0].String()
+	encryptionKey := args[1].String()
+	data, err := sdk.GetAuthData(publicKey, encryptionKey)
+	if err != nil {
+		return js.ValueOf(nil)
+	}
+	return js.ValueOf(data)
+}
+
 func main() {
 	c := make(chan struct{})
 	fmt.Println("WASM started")
@@ -89,6 +99,7 @@ func main() {
 	vaultInterface["getKeyDirectory"] = makeAsync(getKeyDirectory)
 	vaultInterface["get"] = makeAsync(get)
 	vaultInterface["put"] = makeAsync(put)
+	vaultInterface["getAuthData"] = makeAsync(getAuthData)
 	js.Global().Set("vaultInterface", js.ValueOf(vaultInterface))
 	<-c
 }
