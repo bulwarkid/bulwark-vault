@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput } from "./TextInput";
+import { TextInput } from "../components/TextInput";
 
 type LoginCardProps = {
     onLogin?: (username: string | null, password: string | null) => void;

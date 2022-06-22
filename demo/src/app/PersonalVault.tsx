@@ -1,9 +1,9 @@
 import React from "react";
-import { KeyDirectoryDisplay } from "../components/KeyDirectoryDisplay";
-import { LoginCard } from "../components/LoginCard";
-import { MasterSecretCard } from "../components/MasterSecretCard";
-import { ReadData } from "../components/ReadData";
-import { StoreData } from "../components/StoreData";
+import { KeyDirectoryDisplay } from "./KeyDirectoryDisplay";
+import { LoginCard } from "./LoginCard";
+import { MasterSecretCard } from "./MasterSecretCard";
+import { ReadData } from "./ReadData";
+import { StoreData } from "./StoreData";
 import * as vault from "../wasm/vault";
 
 type PersonalVaultState = {

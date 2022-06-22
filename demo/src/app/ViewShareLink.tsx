@@ -1,9 +1,9 @@
 import React from "react";
 import { getAuthData } from "../wasm/vault";
 import { setImmediate } from "../util";
-import { TextDisplay } from "./TextDisplay";
-import { Card } from "./Card";
-import { Label } from "./Label";
+import { TextDisplay } from "../components/TextDisplay";
+import { Card } from "../components/Card";
+import { Label } from "../components/Label";
 
 type ViewShareLinkProps = {
     rawFragment: string;
