@@ -4,6 +4,7 @@ import { setImmediate } from "../util";
 import { TextDisplay } from "../components/TextDisplay";
 import { Card } from "../components/Card";
 import { Label } from "../components/Label";
+import { InlineLabel } from "../components/InlineLabel";
 
 type ViewShareLinkProps = {
     rawFragment: string;
@@ -47,12 +48,13 @@ export class ViewShareLink extends React.Component<
         const encryptionKeyBase64 = parts[1];
 
         return (
-            <div>
-                <TextDisplay inlineLabel="Public Key" text={publicKeyBase64} />
-                <TextDisplay
-                    inlineLabel="Encryption Key"
-                    text={encryptionKeyBase64}
-                />
+            <div className="flex flex-col gap-y-4 w-full">
+                <InlineLabel label="Public Key">
+                    <TextDisplay text={publicKeyBase64} />
+                </InlineLabel>
+                <InlineLabel label="Encryption Key">
+                    <TextDisplay text={encryptionKeyBase64} />
+                </InlineLabel>
                 <Label label="Data">
                     <TextDisplay text={this.state.data} />
                 </Label>

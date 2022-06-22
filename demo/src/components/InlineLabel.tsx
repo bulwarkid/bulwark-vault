@@ -5,14 +5,14 @@ type Props = {
     children?: React.ReactNode;
 };
 
-export class Label extends React.Component<Props> {
+export class InlineLabel extends React.Component<Props> {
     render() {
         return (
             <div className="form-control w-full max-w-md">
-                <label className="label">
-                    <span className="label-text">{this.props.label}</span>
+                <label className="input-group whitespace-nowrap">
+                    <span>{this.props.label}</span>
+                    {this.props.children}
                 </label>
-                {this.props.children}
             </div>
         );
     }

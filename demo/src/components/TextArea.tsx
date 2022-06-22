@@ -16,7 +16,7 @@ export class TextArea extends React.Component<TextAreaProps> {
         return (
             <textarea
                 placeholder={this.props.placeholder}
-                className="textarea textarea-bordered w-full max-w-s"
+                className="textarea textarea-bordered w-full max-w-md"
                 onChange={(e) => {
                     this.data = e.target.value;
                 }}

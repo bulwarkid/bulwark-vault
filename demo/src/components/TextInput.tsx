@@ -1,7 +1,6 @@
 import React from "react";
 
 type TextInputProps = {
-    label?: string;
     placeholder: string;
     type?: string;
 };

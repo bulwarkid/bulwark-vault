@@ -3,6 +3,7 @@ import { createAuthData } from "../wasm/vault";
 import { TextArea } from "../components/TextArea";
 import { TextDisplay } from "../components/TextDisplay";
 import { TextInput } from "../components/TextInput";
+import { InlineLabel } from "../components/InlineLabel";
 
 type CreateShareLinkState = {
     loading?: boolean;
@@ -26,18 +27,15 @@ export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
         } else if (this.state.publicKey) {
             output = (
                 <>
-                    <TextDisplay
-                        inlineLabel="Public Key"
-                        text={this.state.publicKey}
-                    />
-                    <TextDisplay
-                        inlineLabel="Private Key"
-                        text={this.state.privateKey}
-                    />
-                    <TextDisplay
-                        inlineLabel="Encryption Key"
-                        text={this.state.encryptionKey}
-                    />
+                    <InlineLabel label="Public Key">
+                        <TextDisplay text={this.state.publicKey} />
+                    </InlineLabel>
+                    <InlineLabel label="Private Key">
+                        <TextDisplay text={this.state.privateKey} />
+                    </InlineLabel>
+                    <InlineLabel label="Encryption Key">
+                        <TextDisplay text={this.state.encryptionKey} />
+                    </InlineLabel>
                     <div className="form-control max-w-full">
                         <div className="input-group max-w-full whitespace-nowrap">
                             <span>Share Link</span>
