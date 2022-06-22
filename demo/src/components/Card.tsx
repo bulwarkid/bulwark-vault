@@ -4,6 +4,7 @@ type CardProps = {
     title?: string;
     children?: React.ReactNode;
     width?: number;
+    extraClasses?: string;
 };
 
 export class Card extends React.Component<CardProps> {
@@ -17,8 +18,12 @@ export class Card extends React.Component<CardProps> {
             style.width = `${this.props.width}rem`;
             style.maxWidth = `${this.props.width}rem`;
         }
+        let cardClass = "card shadow-xl bg-base-100 h-min border";
+        if (this.props.extraClasses) {
+            cardClass += " " + this.props.extraClasses;
+        }
         return (
-            <div className="card shadow-xl bg-base-100 h-min" style={style}>
+            <div className={cardClass} style={style}>
                 <div className="card-body flex flex-col p-4 items-center">
                     {title}
                     <div className="w-full flex flex-col gap-y-4 p-4">

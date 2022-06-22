@@ -57,7 +57,7 @@ export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
             );
         }
         return (
-            <Card title="Share Data" width={48}>
+            <div>
                 <div className="flex flex-col items-center gap-y-4">
                     <TextArea ref={this.dataRef} placeholder="Data to Share" />
                     <button
@@ -68,7 +68,7 @@ export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
                     </button>
                 </div>
                 {output}
-            </Card>
+            </div>
         );
     }
 

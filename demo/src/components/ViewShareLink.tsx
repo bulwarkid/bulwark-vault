@@ -47,7 +47,7 @@ export class ViewShareLink extends React.Component<
         const encryptionKeyBase64 = parts[1];
 
         return (
-            <Card title="View Data">
+            <div>
                 <TextDisplay inlineLabel="Public Key" text={publicKeyBase64} />
                 <TextDisplay
                     inlineLabel="Encryption Key"
@@ -56,7 +56,7 @@ export class ViewShareLink extends React.Component<
                 <Label label="Data">
                     <TextDisplay text={this.state.data} />
                 </Label>
-            </Card>
+            </div>
         );
     }
 
