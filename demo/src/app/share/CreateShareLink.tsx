@@ -58,8 +58,8 @@ export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
             );
         }
         return (
-            <div>
-                <div className="flex flex-col items-center gap-y-4">
+            <div className="flex flex-col items-center gap-y-4">
+                <div className="flex flex-col items-center gap-y-4 w-full">
                     <TextArea ref={this.dataRef} placeholder="Data to Share" />
                     <button
                         className="btn max-w-sm"
@@ -68,7 +68,9 @@ export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
                         Create Link
                     </button>
                 </div>
-                {output}
+                <div className="flex flex-col items-center gap-y-4">
+                    {output}
+                </div>
             </div>
         );
     }

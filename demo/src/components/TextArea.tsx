@@ -20,7 +20,7 @@ export class TextArea extends React.Component<TextAreaProps, TextAreaState> {
         return (
             <textarea
                 placeholder={this.props.placeholder}
-                className="textarea textarea-bordered w-full max-w-md"
+                className="textarea textarea-bordered w-full max-w-lg"
                 value={this.state.data}
                 onChange={(e) => {
                     this.setState({ data: e.target.value });

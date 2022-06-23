@@ -48,7 +48,7 @@ export class ViewShareLink extends React.Component<
         }
 
         return (
-            <div className="flex flex-col gap-y-4 w-full">
+            <div className="flex flex-col gap-y-4 w-full items-center">
                 <InlineLabel label="Public Key">
                     <TextDisplay text={publicKey} />
                 </InlineLabel>
@@ -56,7 +56,7 @@ export class ViewShareLink extends React.Component<
                     <TextDisplay text={encryptionKey} />
                 </InlineLabel>
                 <Label label="Data">
-                    <TextDisplay text={this.state.data} />
+                    <TextDisplay text={this.state.data} area={true} />
                 </Label>
             </div>
         );

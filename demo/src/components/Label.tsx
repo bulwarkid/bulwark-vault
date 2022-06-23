@@ -8,7 +8,7 @@ type Props = {
 export class Label extends React.Component<Props> {
     render() {
         return (
-            <div className="form-control w-full max-w-md">
+            <div className="form-control w-full max-w-lg">
                 <label className="label">
                     <span className="label-text">{this.props.label}</span>
                 </label>

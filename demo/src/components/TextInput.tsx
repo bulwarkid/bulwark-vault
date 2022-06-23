@@ -17,7 +17,7 @@ export class TextInput extends React.Component<TextInputProps> {
             <input
                 type={this.props.type ?? "text"}
                 placeholder={this.props.placeholder}
-                className="input input-bordered w-full max-w-sm"
+                className="input input-bordered w-full max-w-lg"
                 onChange={(e) => {
                     this.data = e.target.value;
                     if (this.props.onChange) {
