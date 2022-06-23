@@ -1,10 +1,10 @@
 import React from "react";
-import { InlineLabel } from "../components/InlineLabel";
-import { Label } from "../components/Label";
-import { TextArea } from "../components/TextArea";
-import { TextDisplay } from "../components/TextDisplay";
-import { TextInput } from "../components/TextInput";
-import { getAuthData } from "../wasm/vault";
+import { InlineLabel } from "../../components/InlineLabel";
+import { Label } from "../../components/Label";
+import { TextArea } from "../../components/TextArea";
+import { TextDisplay } from "../../components/TextDisplay";
+import { TextInput } from "../../components/TextInput";
+import { getAuthData } from "../../wasm/vault";
 
 type EditSharedDataProps = {
     initialLink?: string;

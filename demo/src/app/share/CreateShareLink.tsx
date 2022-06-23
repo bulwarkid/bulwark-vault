@@ -1,9 +1,9 @@
 import React from "react";
-import { createAuthData } from "../wasm/vault";
-import { TextArea } from "../components/TextArea";
-import { TextDisplay } from "../components/TextDisplay";
-import { TextInput } from "../components/TextInput";
-import { InlineLabel } from "../components/InlineLabel";
+import { createAuthData } from "../../wasm/vault";
+import { TextArea } from "../../components/TextArea";
+import { TextDisplay } from "../../components/TextDisplay";
+import { TextInput } from "../../components/TextInput";
+import { InlineLabel } from "../../components/InlineLabel";
 
 type CreateShareLinkState = {
     loading?: boolean;

@@ -1,10 +1,10 @@
 import React from "react";
-import { getAuthData } from "../wasm/vault";
-import { setImmediate } from "../util";
-import { TextDisplay } from "../components/TextDisplay";
-import { Card } from "../components/Card";
-import { Label } from "../components/Label";
-import { InlineLabel } from "../components/InlineLabel";
+import { getAuthData } from "../../wasm/vault";
+import { setImmediate } from "../../util";
+import { TextDisplay } from "../../components/TextDisplay";
+import { Card } from "../../components/Card";
+import { Label } from "../../components/Label";
+import { InlineLabel } from "../../components/InlineLabel";
 
 type ViewShareLinkProps = {
     rawFragment: string;

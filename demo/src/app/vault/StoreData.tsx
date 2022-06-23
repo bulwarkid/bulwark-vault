@@ -1,6 +1,6 @@
 import React from "react";
-import { Label } from "../components/Label";
-import { TextInput } from "../components/TextInput";
+import { Label } from "../../components/Label";
+import { TextInput } from "../../components/TextInput";
 
 type StoreDataProps = {
     onSubmit?: (path: string, data: string) => void;
