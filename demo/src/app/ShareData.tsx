@@ -1,6 +1,7 @@
 import React from "react";
 import { Card } from "../components/Card";
 import { CreateShareLink } from "./CreateShareLink";
+import { EditSharedData } from "./EditSharedData";
 import { ViewShareLink } from "./ViewShareLink";
 
 enum Tab {
@@ -49,7 +50,7 @@ export class ShareData extends React.Component<{}, State> {
         } else if (this.state.tab === Tab.VIEW) {
             cardContents = <ViewShareLink rawFragment={fragment} />;
         } else if (this.state.tab === Tab.EDIT) {
-            cardContents = <div />;
+            cardContents = <EditSharedData />;
         }
         return (
             <div className="flex gap-8">

@@ -7,7 +7,7 @@ type TextDisplayProps = {
 export class TextDisplay extends React.Component<TextDisplayProps> {
     render() {
         return (
-            <div className="input input-bordered input-md flex items-center overflow-x-scroll whitespace-nowrap">
+            <div className="input input-bordered input-md flex items-center overflow-x-scroll whitespace-nowrap grow">
                 {this.props.text}
             </div>
         );

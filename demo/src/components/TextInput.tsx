@@ -3,6 +3,7 @@ import React from "react";
 type TextInputProps = {
     placeholder: string;
     type?: string;
+    onChange?: () => void;
 };
 
 export class TextInput extends React.Component<TextInputProps> {
@@ -19,6 +20,9 @@ export class TextInput extends React.Component<TextInputProps> {
                 className="input input-bordered w-full max-w-sm"
                 onChange={(e) => {
                     this.data = e.target.value;
+                    if (this.props.onChange) {
+                        this.props.onChange();
+                    }
                 }}
             />
         );
