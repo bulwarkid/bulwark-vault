@@ -1,10 +1,11 @@
 import React from "react";
+import { showAlert } from "../../components/Alert";
 import { InlineLabel } from "../../components/InlineLabel";
 import { Label } from "../../components/Label";
 import { TextArea } from "../../components/TextArea";
 import { TextDisplay } from "../../components/TextDisplay";
 import { TextInput } from "../../components/TextInput";
-import { getAuthData } from "../../wasm/vault";
+import { getAuthData, writeAuthData } from "../../wasm/vault";
 
 type EditSharedDataProps = {
     initialLink?: string;
@@ -12,7 +13,6 @@ type EditSharedDataProps = {
 
 type EditSharedDataState = {
     link?: string;
-    data?: string;
 };
 
 export class EditSharedData extends React.Component<
@@ -20,6 +20,7 @@ export class EditSharedData extends React.Component<
     EditSharedDataState
 > {
     linkRef = React.createRef<TextInput>();
+    dataRef = React.createRef<TextArea>();
     constructor(props: EditSharedDataProps) {
         super(props);
         this.state = { link: props.initialLink };
@@ -67,13 +68,12 @@ export class EditSharedData extends React.Component<
                     <TextDisplay text={encryptionKey} />
                 </InlineLabel>
                 <Label label="Data">
-                    <TextArea
-                        placeholder="Data..."
-                        initialData={this.state.data}
-                    />
+                    <TextArea ref={this.dataRef} placeholder="Data..." />
                 </Label>
                 <div className="flex justify-center">
-                    <button className="btn max-w-sm">Update</button>
+                    <button className="btn max-w-sm" onClick={this.writeData}>
+                        Update
+                    </button>
                 </div>
             </div>
         );
@@ -122,6 +122,26 @@ export class EditSharedData extends React.Component<
         encryptionKey: string
     ) => {
         const data = await getAuthData(publicKey, encryptionKey);
-        this.setState({ data });
+        this.dataRef.current?.setState({ data });
+    };
+
+    writeData = async () => {
+        if (!this.state.link) {
+            return;
+        }
+        const keys = this.getKeys(this.state.link);
+        if (!keys.publicKey || !keys.privateKey || !keys.encryptionKey) {
+            return;
+        }
+        const data = this.dataRef.current?.state.data || "";
+        const response = await writeAuthData(
+            data,
+            keys.publicKey,
+            keys.privateKey,
+            keys.encryptionKey
+        );
+        if (!response) {
+            showAlert("Error writing data!");
+        }
     };
 }

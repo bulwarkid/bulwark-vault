@@ -54,6 +54,21 @@ export async function getAuthData(publicKeyBase64, encryptionKeyBase64) {
     );
 }
 
+export async function writeAuthData(
+    data,
+    publicKeyBase64,
+    privateKeyBase64,
+    encryptionKeyBase64
+) {
+    await waitForWasmLoad();
+    return await window.globalThis.vaultInterface.writeAuthData(
+        data,
+        publicKeyBase64,
+        privateKeyBase64,
+        encryptionKeyBase64
+    );
+}
+
 export async function createAuthData(data) {
     await waitForWasmLoad();
     return await window.globalThis.vaultInterface.createAuthData(data);

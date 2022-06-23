@@ -7,20 +7,23 @@ type TextAreaProps = {
     initialData?: string;
 };
 
-export class TextArea extends React.Component<TextAreaProps> {
-    data: string;
+type TextAreaState = {
+    data?: string;
+};
+
+export class TextArea extends React.Component<TextAreaProps, TextAreaState> {
     constructor(props: TextAreaProps) {
         super(props);
-        this.data = this.props.initialData ?? "";
+        this.state = { data: this.props.initialData };
     }
     render() {
         return (
             <textarea
                 placeholder={this.props.placeholder}
                 className="textarea textarea-bordered w-full max-w-md"
-                value={this.props.initialData}
+                value={this.state.data}
                 onChange={(e) => {
-                    this.data = e.target.value;
+                    this.setState({ data: e.target.value });
                 }}
             />
         );

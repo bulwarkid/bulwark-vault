@@ -92,6 +92,19 @@ func getAuthData(this js.Value, args []js.Value) any {
 	return js.ValueOf(string(data))
 }
 
+
+func writeAuthData(this js.Value, args []js.Value) any {
+	data := args[0].String()
+	publicKey := args[1].String()
+	privateKey := args[2].String()
+	encryptionKey := args[3].String()
+	 err := sdk.WriteAuthData(data, publicKey, privateKey, encryptionKey)
+	if err != nil {
+		return js.ValueOf(nil)
+	}
+	return js.ValueOf("Success")
+}
+
 func createAuthData(this js.Value, args []js.Value) any {
 	data := args[0].String()
 	publicKey, privateKey, encryptionKey, err := sdk.CreateAuthData(data)
@@ -115,6 +128,7 @@ func main() {
 	vaultInterface["get"] = makeAsync(get)
 	vaultInterface["put"] = makeAsync(put)
 	vaultInterface["getAuthData"] = makeAsync(getAuthData)
+	vaultInterface["writeAuthData"] = makeAsync(writeAuthData)
 	vaultInterface["createAuthData"] = makeAsync(createAuthData)
 	js.Global().Set("vaultInterface", js.ValueOf(vaultInterface))
 	<-c

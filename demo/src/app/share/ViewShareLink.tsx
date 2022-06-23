@@ -40,20 +40,20 @@ export class ViewShareLink extends React.Component<
             return emptyBox;
         }
 
-        const parts = this.props.rawFragment.split("~");
-        if (parts.length !== 2) {
+        const { publicKey, encryptionKey } = this.getKeys(
+            this.props.rawFragment
+        );
+        if (!publicKey || !encryptionKey) {
             return emptyBox;
         }
-        const publicKeyBase64 = parts[0];
-        const encryptionKeyBase64 = parts[1];
 
         return (
             <div className="flex flex-col gap-y-4 w-full">
                 <InlineLabel label="Public Key">
-                    <TextDisplay text={publicKeyBase64} />
+                    <TextDisplay text={publicKey} />
                 </InlineLabel>
                 <InlineLabel label="Encryption Key">
-                    <TextDisplay text={encryptionKeyBase64} />
+                    <TextDisplay text={encryptionKey} />
                 </InlineLabel>
                 <Label label="Data">
                     <TextDisplay text={this.state.data} />
@@ -66,16 +66,26 @@ export class ViewShareLink extends React.Component<
         if (!props.rawFragment) {
             return;
         }
-        const parts = props.rawFragment.split("~");
-        if (parts.length !== 2) {
-            return;
-        }
-        const publicKeyBase64 = parts[0];
-        const encryptionKeyBase64 = parts[1];
+        const { publicKey, encryptionKey } = this.getKeys(props.rawFragment);
         setImmediate(() => {
-            getAuthData(publicKeyBase64, encryptionKeyBase64).then((data) => {
+            getAuthData(publicKey, encryptionKey).then((data) => {
                 this.setState({ data });
             });
         });
+    };
+
+    getKeys = (rawFragment: string) => {
+        const parts = rawFragment.split("~");
+        if (parts.length === 2) {
+            const publicKey = parts[0];
+            const encryptionKey = parts[1];
+            return { publicKey, encryptionKey };
+        } else if (parts.length === 3) {
+            const publicKey = parts[0];
+            const encryptionKey = parts[2];
+            return { publicKey, encryptionKey };
+        } else {
+            return { publicKey: undefined, privateKey: undefined };
+        }
     };
 }

@@ -15,7 +15,7 @@ type CreateShareLinkState = {
 };
 
 export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
-    dataRef = React.createRef<TextInput>();
+    dataRef = React.createRef<TextArea>();
     constructor(props: {}) {
         super(props);
         this.state = {};
@@ -75,7 +75,7 @@ export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
 
     createShareLink = async () => {
         this.setState({ loading: true });
-        const data = this.dataRef.current?.data;
+        const data = this.dataRef.current?.state.data;
         if (!data) {
             return;
         }
