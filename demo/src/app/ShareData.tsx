@@ -1,8 +1,8 @@
 import React from "react";
 import { Card } from "../components/Card";
-import { CreateShareLink } from "./CreateShareLink";
-import { EditSharedData } from "./EditSharedData";
-import { ViewShareLink } from "./ViewShareLink";
+import { CreateShareLink } from "./share/CreateShareLink";
+import { EditSharedData } from "./share/EditSharedData";
+import { ViewShareLink } from "./share/ViewShareLink";
 
 enum Tab {
     SHARE,

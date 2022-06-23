@@ -36,20 +36,24 @@ export class CreateShareLink extends React.Component<{}, CreateShareLinkState> {
                     <InlineLabel label="Encryption Key">
                         <TextDisplay text={this.state.encryptionKey} />
                     </InlineLabel>
-                    <div className="form-control max-w-full">
-                        <div className="input-group max-w-full whitespace-nowrap">
-                            <span>Share Link</span>
-                            <TextDisplay text={this.state.shareLink} />
-                            <button
-                                className="btn"
-                                onClick={() =>
-                                    this.copyLink(this.state.shareLink)
-                                }
-                            >
-                                Copy
-                            </button>
-                        </div>
-                    </div>
+                    <InlineLabel label="Share Link">
+                        <TextDisplay text={this.state.shareLink} />
+                        <button
+                            className="btn"
+                            onClick={() => this.copyLink(this.state.shareLink)}
+                        >
+                            Copy
+                        </button>
+                    </InlineLabel>
+                    <InlineLabel label="Edit Link">
+                        <TextDisplay text={this.state.editLink} />
+                        <button
+                            className="btn"
+                            onClick={() => this.copyLink(this.state.editLink)}
+                        >
+                            Copy
+                        </button>
+                    </InlineLabel>
                 </>
             );
         }

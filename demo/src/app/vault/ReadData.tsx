@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput } from "../components/TextInput";
+import { TextInput } from "../../components/TextInput";
 
 type ReadDataProps = {
     onRead?: (path: string) => Promise<string | undefined>;
